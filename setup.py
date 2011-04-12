@@ -8,5 +8,8 @@ setup(
         'console_scripts': [
             'infra = infra:main',
         ],
-    }
+    },
+    install_requires=[
+        'eventlet',
+    ]
 )
