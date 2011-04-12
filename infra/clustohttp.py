@@ -64,6 +64,12 @@ class ClustoProxy(object):
             raise Exception(response)
         return [EntityProxy(self.url, x) for x in json.loads(response)]
 
+    def get(self, name):
+        status, headers, response = request('GET', self.url + '/query/get?name=%s' % quote(name))
+        if status != 200:
+            raise Exception(response)
+        return [EntityProxy(self.url, x['object'], cache=x) for x in json.loads(response)]
+
     def get_by_name(self, name):
         status, headers, response = request('GET', self.url + '/query/get_by_name?name=%s' % quote(name))
         if status != 200:
@@ -116,6 +122,10 @@ class EntityProxy(object):
                 return None
         return method
 
+    @property
+    def type(self):
+        return self.path.lstrip('/').split('/', 1)[0]
+
     def show(self, use_cache=True):
         if use_cache and self.cache:
             result = self.cache
@@ -159,6 +169,14 @@ class EntityProxy(object):
 
     def attr_values(self, **kwargs):
         return [x['value'] for x in self.attrs(**kwargs)]
+
+    def attr_value(self, **kwargs):
+        a = self.attrs(**kwargs)
+        if len(a) > 1:
+            raise Exception('Too many values for attr_value: %i' % len(a))
+        if not a:
+            return None
+        return a[0]['value']
     
     def set_port_attr(self, porttype, portnum, key, value):
         return self.__getattr__('set_port_attr')(porttype=porttype, portnum=portnum, key=key, value=value)
