@@ -10,6 +10,7 @@ import sys
 commands = {
     'list-pool': infra.commands.list_pool,
     'info': infra.commands.info,
+    'attr': infra.commands.attr,
 }
 
 def main():

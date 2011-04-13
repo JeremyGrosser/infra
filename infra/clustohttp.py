@@ -177,7 +177,7 @@ class EntityProxy(object):
         if not a:
             return None
         return a[0]['value']
-    
+
     def set_port_attr(self, porttype, portnum, key, value):
         return self.__getattr__('set_port_attr')(porttype=porttype, portnum=portnum, key=key, value=value)
 
